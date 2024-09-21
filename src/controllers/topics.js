@@ -23,62 +23,43 @@ const upload_url = nconf.get('upload_url');
 const validSorts = ['oldest_to_newest', 'newest_to_oldest', 'most_votes'];
 
 topicsController.get = async function getTopic(req, res, next) {
+	console.log('ELLIA_YANG');
 	const tid = req.params.topic_id;
-	if (
-		(req.params.post_index && !utils.isNumber(req.params.post_index) && req.params.post_index !== 'unread') ||
-		!utils.isNumber(tid)
-	) {
+
+	if (isInvalidRequest(req, tid)) {
 		return next();
 	}
 	let postIndex = parseInt(req.params.post_index, 10) || 1;
 	const topicData = await topics.getTopicData(tid);
+
 	if (!topicData) {
 		return next();
 	}
-	const [
-		userPrivileges,
-		settings,
-		rssToken,
-	] = await Promise.all([
-		privileges.topics.get(tid, req.uid),
-		user.getSettings(req.uid),
-		user.auth.getFeedToken(req.uid),
-	]);
 
+	const [userPrivileges, settings, rssToken] = await getUserData(req, tid);
 	let currentPage = parseInt(req.query.page, 10) || 1;
 	const pageCount = Math.max(1, Math.ceil((topicData && topicData.postcount) / settings.postsPerPage));
-	const invalidPagination = (settings.usePagination && (currentPage < 1 || currentPage > pageCount));
-	if (
-		userPrivileges.disabled ||
-		invalidPagination ||
-		(topicData.scheduled && !userPrivileges.view_scheduled)
-	) {
+
+	if (isAccessRestricted(userPrivileges, topicData, settings, currentPage, pageCount)) {
 		return next();
 	}
 
-	if (!userPrivileges['topics:read'] || (!topicData.scheduled && topicData.deleted && !userPrivileges.view_deleted)) {
+	if (isTopicUnreadable(userPrivileges, topicData)) {
 		return helpers.notAllowed(req, res);
 	}
 
-	if (req.params.post_index === 'unread') {
-		postIndex = await topics.getUserBookmark(tid, req.uid);
+	if (await handleSpecialCases(req, res, topicData, tid, postIndex)) {
+		return;
 	}
 
-	if (!res.locals.isAPI && (!req.params.slug || topicData.slug !== `${tid}/${req.params.slug}`) && (topicData.slug && topicData.slug !== `${tid}/`)) {
-		return helpers.redirect(res, `/topic/${topicData.slug}${postIndex ? `/${postIndex}` : ''}${generateQueryString(req.query)}`, true);
-	}
-
-	if (utils.isNumber(postIndex) && topicData.postcount > 0 && (postIndex < 1 || postIndex > topicData.postcount)) {
-		return helpers.redirect(res, `/topic/${tid}/${req.params.slug}${postIndex > topicData.postcount ? `/${topicData.postcount}` : ''}${generateQueryString(req.query)}`);
-	}
 	postIndex = Math.max(1, postIndex);
-	const sort = validSorts.includes(req.query.sort) ? req.query.sort : settings.topicPostSort;
-	const set = sort === 'most_votes' ? `tid:${tid}:posts:votes` : `tid:${tid}:posts`;
-	const reverse = sort === 'newest_to_oldest' || sort === 'most_votes';
+	const sort = getSortOption(req.query.sort, validSorts, settings.topicPostSort);
+	const { set, reverse } = getSetAndReverseOptions(sort, tid);
 
 	if (!req.query.page) {
 		currentPage = calculatePageFromIndex(postIndex, settings);
 	}
+
 	if (settings.usePagination && req.query.page) {
 		const top = ((currentPage - 1) * settings.postsPerPage) + 1;
 		const bottom = top + settings.postsPerPage;
@@ -86,6 +67,7 @@ topicsController.get = async function getTopic(req, res, next) {
 			postIndex = top;
 		}
 	}
+
 	const { start, stop } = calculateStartStop(currentPage, postIndex, settings);
 
 	await topics.getTopicWithPosts(topicData, set, req.uid, start, stop, reverse);
@@ -138,6 +120,72 @@ topicsController.get = async function getTopic(req, res, next) {
 	});
 	res.render('topic', topicData);
 };
+
+function isInvalidRequest(req, tid) {
+	return (
+		(req.params.post_index && !utils.isNumber(req.params.post_index) && req.params.post_index !== 'unread') ||
+		!utils.isNumber(tid)
+	);
+}
+
+async function getUserData(req, tid) {
+	return Promise.all([
+		privileges.topics.get(tid, req.uid),
+		user.getSettings(req.uid),
+		user.auth.getFeedToken(req.uid),
+	]);
+}
+
+function isAccessRestricted(userPrivileges, topicData, settings, currentPage, pageCount) {
+	const invalidPagination = (settings.usePagination && (currentPage < 1 || currentPage > pageCount));
+	return (
+		userPrivileges.disabled ||
+		invalidPagination ||
+		(topicData.scheduled && !userPrivileges.view_scheduled)
+	);
+}
+
+function isTopicUnreadable(userPrivileges, topicData) {
+	return (!userPrivileges['topics:read'] || (!topicData.scheduled && topicData.deleted && !userPrivileges.view_deleted));
+}
+
+async function handleSpecialCases(req, res, topicData, tid, postIndex) {
+	if (req.params.post_index === 'unread') {
+		postIndex = await topics.getUserBookmark(tid, req.uid);
+	}
+
+	if (!res.locals.isAPI && needsSlugRedirect(req, topicData, tid)) {
+		helpers.redirect(res, `/topic/${topicData.slug}${postIndex ? `/${postIndex}` : ''}${generateQueryString(req.query)}`, true);
+		return true;
+	}
+
+	if (isInvalidPostIndex(postIndex, topicData.postcount)) {
+		helpers.redirect(res, `/topic/${tid}/${req.params.slug}${postIndex > topicData.postcount ? `/${topicData.postcount}` : ''}${generateQueryString(req.query)}`);
+		return true;
+	}
+
+	return false;
+}
+
+function needsSlugRedirect(req, topicData, tid) {
+	return (!req.params.slug || topicData.slug !== `${tid}/${req.params.slug}`) && (topicData.slug && topicData.slug !== `${tid}/`);
+}
+
+function isInvalidPostIndex(postIndex, postCount) {
+	return utils.isNumber(postIndex) && postCount > 0 && (postIndex < 1 || postIndex > postCount);
+}
+
+function getSortOption(requestedSort, validSorts, defaultSort) {
+	return validSorts.includes(requestedSort) ? requestedSort : defaultSort;
+}
+
+function getSetAndReverseOptions(sort, tid) {
+	const isMostVotes = sort === 'most_votes';
+	return {
+		set: isMostVotes ? `tid:${tid}:posts:votes` : `tid:${tid}:posts`,
+		reverse: isMostVotes || sort === 'newest_to_oldest',
+	};
+}
 
 function generateQueryString(query) {
 	const qString = qs.stringify(query);
