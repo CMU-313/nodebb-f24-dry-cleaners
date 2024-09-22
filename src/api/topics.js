@@ -83,6 +83,11 @@ topicsAPI.create = async function (caller, data) {
 	return result.topicData;
 };
 
+topicsAPI.changeVisibility = async function (caller, { tid, isprivate }) {
+    const updatedTopic = await topics.updateVisibility(tid, caller.uid, isprivate);
+    return updatedTopic;
+};
+
 topicsAPI.reply = async function (caller, data) {
 	if (!data || !data.tid || (meta.config.minimumPostLength !== 0 && !data.content)) {
 		throw new Error('[[error:invalid-data]]');
