@@ -22,7 +22,7 @@ privsTopics.get = async function (tid, uid) {
 		'posts:upvote', 'posts:downvote',
 		'posts:delete', 'posts:view_deleted', 'read', 'purge',
 	];
-	const topicData = await topics.getTopicFields(tid, ['cid', 'uid', 'locked', 'deleted', 'scheduled']);
+	const topicData = await topics.getTopicFields(tid, ['cid', 'uid', 'locked', 'deleted', 'scheduled', 'private']);
 	const [userPrivileges, isAdministrator, isModerator, disabled] = await Promise.all([
 		helpers.isAllowedTo(privs, uid, topicData.cid),
 		user.isAdministrator(uid),
@@ -32,13 +32,14 @@ privsTopics.get = async function (tid, uid) {
 	const privData = _.zipObject(privs, userPrivileges);
 	const isOwner = uid > 0 && uid === topicData.uid;
 	const isAdminOrMod = isAdministrator || isModerator;
+	const readable = privData['topics:read'] && (!topicData.private || (isAdminOrMod || isOwner));
 	const editable = isAdminOrMod;
 	const deletable = (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator;
 	const mayReply = privsTopics.canViewDeletedScheduled(topicData, {}, false, privData['topics:schedule']);
 
 	return await plugins.hooks.fire('filter:privileges.topics.get', {
 		'topics:reply': (privData['topics:reply'] && ((!topicData.locked && mayReply) || isModerator)) || isAdministrator,
-		'topics:read': privData['topics:read'] || isAdministrator,
+		'topics:read': readable,
 		'topics:schedule': privData['topics:schedule'] || isAdministrator,
 		'topics:tag': privData['topics:tag'] || isAdministrator,
 		'topics:delete': (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator,
@@ -73,7 +74,7 @@ privsTopics.filterTids = async function (privilege, tids, uid) {
 		return [];
 	}
 
-	const topicsData = await topics.getTopicsFields(tids, ['tid', 'cid', 'deleted', 'scheduled']);
+	const topicsData = await topics.getTopicsFields(tids, ['tid', 'cid', 'deleted', 'scheduled', 'private']);
 	const cids = _.uniq(topicsData.map(topic => topic.cid));
 	const results = await privsCategories.getBase(privilege, cids, uid);
 
@@ -88,6 +89,7 @@ privsTopics.filterTids = async function (privilege, tids, uid) {
 
 	tids = topicsData.filter(t => (
 		cidsSet.has(t.cid) &&
+		(!t.private || privsTopics.isOwnerOrAdminOrMod(t.tid, uid)) &&
 		(results.isAdmin || privsTopics.canViewDeletedScheduled(t, {}, canViewDeleted[t.cid], canViewScheduled[t.cid]))
 	)).map(t => t.tid);
 
