@@ -84,8 +84,8 @@ topicsAPI.create = async function (caller, data) {
 };
 
 topicsAPI.changeVisibility = async function (caller, { tid, isprivate }) {
-    const updatedTopic = await topics.updateVisibility(tid, caller.uid, isprivate);
-    return updatedTopic;
+	const updatedTopic = await topics.updateVisibility(tid, caller.uid, isprivate);
+	return updatedTopic;
 };
 
 topicsAPI.reply = async function (caller, data) {
