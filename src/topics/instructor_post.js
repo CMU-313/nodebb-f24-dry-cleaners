@@ -1,28 +1,26 @@
 'use strict';
 
-const posts = require('../posts'); // assuming this handles posts logic
-const groups = require('../groups'); // assuming groups is the module handling roles
+
+const db = require('../database');
+const posts = require('../posts');
+const groups = require('../groups');
 
 const isInstructor = uid => groups.isMember(uid, 'instructor');
 
 
-module.exports = function (app) {
-	// Use arrow function for the route handler
-	app.get('/api/instructor-commented/:postId', async (req, res) => {
-		try {
-			const { postId } = req.params; // Destructure req.params to resolve the prefer-destructuring issue
+module.exports = function (Topics) {
+	Topics.hasInstructorPosts = async function (tid) {
+		// Get the list of posts for the specified topic ID (tid)
+		const pids = await db.getSortedSetRange(`tid:${tid}:posts`, 0, -1);
 
-			// Fetch all comments on the post
-			const comments = await posts.getCommentsByPostId(postId);
-
-			// Check if any of the commenters are instructors
-			const hasInstructorComment = await Promise.any(
-				comments.map(async ({ uid }) => isInstructor(uid)) // Destructure comment to get uid directly
-			);
-
-			res.json({ instructorCommented: hasInstructorComment });
-		} catch (err) {
-			res.status(500).json({ error: 'Unable to check instructor comments.' });
+		if (!pids.length) {
+			return false; // No posts, so return false
 		}
-	});
+
+		// Retrieve the post data for the retrieved post IDs
+		const postData = await posts.getPostsFields(pids, ['pid', 'uid']);
+
+		// Check if any post is made by an instructor using the isInstructor function
+		return postData.some(post => isInstructor(post.uid));
+	};
 };
