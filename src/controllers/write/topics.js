@@ -38,6 +38,17 @@ Topics.reply = async (req, res) => {
 	}
 };
 
+Topics.changeVisibility = async (req, res) => {
+	const { tid } = req.params;
+	const { isprivate } = req.body;
+	try {
+		await api.topics.changeVisibility(tid, isprivate);
+		helpers.formatApiResponse(200, res, { message: 'Visibility updated successfully', isprivate });
+	} catch (err) {
+		helpers.formatApiResponse(500, res, { message: 'An error occurred while changing visibility.', error: err.message });
+	}
+};
+
 async function lockPosting(req, error) {
 	const id = req.uid > 0 ? req.uid : req.sessionID;
 	const value = `posting${id}`;
