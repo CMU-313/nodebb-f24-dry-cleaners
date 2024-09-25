@@ -58,11 +58,11 @@ describe('Topics.hasInstructorPosts', () => {
 		});
 		// console.log(`Instructor replied with post ID ${reply.pid}`);
 
-        const hasInstructorPosts = await topics.hasInstructorPosts(topicObj.topicData.tid);
-        console.log(`Has instructor posts: ${hasInstructorPosts}`);
-        
-        // Ensure the function returns true
-        assert.strictEqual(hasInstructorPosts, true);
+		const hasInstructorPosts = await topics.hasInstructorPosts(topicObj.topicData.tid);
+		console.log(`Has instructor posts: ${hasInstructorPosts}`);
+
+		// Ensure the function returns true
+		assert.strictEqual(hasInstructorPosts, true);
 	});
 
 	it('should return false if no instructor has replied to the topic', async () => {
@@ -88,10 +88,8 @@ describe('Topics.hasInstructorPosts', () => {
 		await topics.delete(topicObj.topicData.tid);
 		await topics.delete(topicObj2.topicData.tid);
 
-		await user.delete(adminUid,instructorUid);
-		await user.delete(adminUid,regularUserUid);
-		await user.delete(adminUid,adminUid);
-		
-		
+		await user.delete(adminUid, instructorUid);
+		await user.delete(adminUid, regularUserUid);
+		await user.delete(adminUid, adminUid);
 	});
 });
