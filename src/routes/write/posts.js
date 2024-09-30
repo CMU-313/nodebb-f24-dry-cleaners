@@ -39,7 +39,6 @@ module.exports = function () {
 
 	setupApiRoute(router, 'get', '/:pid/replies', [middleware.assert.post], controllers.write.posts.getReplies);
 
-	// csrf: 9bdd4db515441aa75b66b1c6b8a17abe63efa976ba5f8a598278fd09d47ffa65b65c8a427aa546024bff79040a1c3e83e7ae6530c0fe7fbac6b547662dbcb63f&EIO
 	setupApiRoute(router, 'put', '/:pid/endorsed', middlewares, controllers.write.posts.updateEndorsement);
 	// Shorthand route to access post routes by topic index
 	router.all('/+byIndex/:index*?', [middleware.checkRequired.bind(null, ['tid'])], controllers.write.posts.redirectByIndex);
