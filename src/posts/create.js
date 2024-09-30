@@ -104,5 +104,7 @@ module.exports = function (Posts) {
 		console.log("TRYING TO UPDATEEE", pid, endorsed);
 		await db.setObjectField(`post:${pid}`, "endorsed", endorsed);
 		console.log("successfuly updated");
+		const postData = await db.getObject(`post:${pid}`);
+		return postData;
 	};
 };

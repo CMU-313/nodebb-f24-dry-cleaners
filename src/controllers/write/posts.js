@@ -201,12 +201,12 @@ Posts.getReplies = async (req, res) => {
 };
 
 Posts.updateEndorsement = async (req, res) => {
-	console.log("Request parameters", req.params, req.query);
+	console.log("Requests", req.params, req.body);
 	// using req.query just for testing purposes here
 	try {
 		await api.posts.updateEndorsement(req, {
 			pid: req.params.pid,
-			endorsed: req.query.endorsed,
+			endorsed: req.body.endorsed,
 		});
 		helpers.formatApiResponse(200, res, {
 			message: "Post has been successfully endorsed.",
