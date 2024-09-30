@@ -207,15 +207,10 @@ postsAPI.restore = async function (caller, data) {
 
 postsAPI.updateEndorsement = async function (caller, data) {
 	// update the field "endorsed" in the post data in the db
-	console.log("IN HERER BROTHER", data.pid, data.endorsed);
 	const postData = await posts.updateEndorsement(data.pid, data.endorsed);
 	if (!postData) {
 		throw new Error("[[error:invalid-data]]");
 	}
-	// emit the event to the topic
-	console.log("finished here");
-	websockets.in(`topic_${postData.tid}`).emit("event:post_endorsed", postData);
-	console.log("After websockets stuff");
 };
 
 async function deleteOrRestore(caller, data, params) {

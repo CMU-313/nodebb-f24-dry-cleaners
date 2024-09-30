@@ -351,10 +351,17 @@ define("forum/topic/postTools", [
 	async function onEndorseClicked(button, pid) {
 		try {
 			console.log("NEW ENDORSE FUNCTION STARRT");
+
+			const $this = $(button);
 			const post = await api.get(`/posts/${pid}`);
 			const currentEndorsed = post.endorsed === "true";
+
 			console.log("Current endorsement:", currentEndorsed);
 			const newEndorsed = !currentEndorsed;
+			$this
+				.find("i")
+				.toggleClass("fa-thumbs-up", newEndorsed)
+				.toggleClass("fa-thumbs-o-up", !newEndorsed);
 			console.log("New endorsement:", newEndorsed);
 			await api.put(`/posts/${pid}/endorsed`, {
 				endorsed: newEndorsed,
@@ -362,7 +369,7 @@ define("forum/topic/postTools", [
 
 			console.log(`Post ${pid} endorsement updated to: ${newEndorsed}`);
 
-			updateEndorsementUI(button, newEndorsed);
+			// updateEndorsementUI(button, newEndorsed);
 		} catch (error) {
 			console.error("Error updating endorsement:", error);
 		}
