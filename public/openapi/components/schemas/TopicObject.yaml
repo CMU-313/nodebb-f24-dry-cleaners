@@ -88,6 +88,8 @@ TopicObject:
             - icon:text
             - icon:bgColor
             - banned_until_readable
+        private:
+          type: string
         teaser:
           type: object
           properties:
@@ -219,6 +221,9 @@ TopicObjectSlim:
           type: number
         deleted:
           type: number
+        private:
+          type: string
+
         deleterUid:
           type: number
         titleRaw:
