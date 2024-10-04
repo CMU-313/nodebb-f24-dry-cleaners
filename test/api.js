@@ -611,6 +611,10 @@ describe('API', async () => {
 			// If schema contains no properties, check passes
 			return;
 		}
+		// Debug logging
+		console.log('------------------------------');
+		console.log('Schema:', JSON.stringify(schema, null, 2));
+		console.log('Response:', JSON.stringify(response, null, 2));
 
 		// Compare the schema to the response
 		required.forEach((prop) => {
