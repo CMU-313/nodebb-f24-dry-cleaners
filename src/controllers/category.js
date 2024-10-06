@@ -15,6 +15,7 @@ const helpers = require('./helpers');
 const utils = require('../utils');
 const translator = require('../translator');
 const analytics = require('../analytics');
+const topics = require('../topics');
 
 const categoryController = module.exports;
 
@@ -90,6 +91,13 @@ categoryController.get = async function (req, res, next) {
 	});
 	if (!categoryData) {
 		return next();
+	}
+
+	// code for instructor comment
+	if (categoryData && categoryData.topics) {
+		await Promise.all(categoryData.topics.map(async (topicData) => {
+			topicData.hasInstructorPosts = await topics.hasInstructorPosts(topicData.tid);
+		}));
 	}
 
 	if (topicIndex > Math.max(categoryData.topic_count - 1, 0)) {

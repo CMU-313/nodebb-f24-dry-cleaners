@@ -57,6 +57,12 @@ recentController.getData = async function (req, url, sort) {
 		floatPinned: req.query.pinned,
 		query: req.query,
 	});
+	// Edits for Instructor Comment //
+	if (data && data.topics) {
+		await Promise.all(data.topics.map(async (topicData) => {
+			topicData.hasInstructorPosts = await topics.hasInstructorPosts(topicData.tid);
+		}));
+	}
 
 	const isDisplayedAsHome = !(req.originalUrl.startsWith(`${relative_path}/api/${url}`) || req.originalUrl.startsWith(`${relative_path}/${url}`));
 	const baseUrl = isDisplayedAsHome ? '' : url;
