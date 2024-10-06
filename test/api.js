@@ -611,14 +611,21 @@ describe('API', async () => {
 			// If schema contains no properties, check passes
 			return;
 		}
-		// Debug logging
-		console.log('------------------------------');
-		console.log('Schema:', JSON.stringify(schema, null, 2));
-		console.log('Response:', JSON.stringify(response, null, 2));
 
+		// // Debug logging
+		// console.log('------------------------------');
+		// console.log('Schema:', JSON.stringify(schema, null, 2));
+		// console.log('Response:', JSON.stringify(response, null, 2));
 		// Compare the schema to the response
 		required.forEach((prop) => {
 			if (schema.hasOwnProperty(prop)) {
+				if (!response.hasOwnProperty(prop)) {
+					console.log('------------------------------');
+					console.log('Schema:', JSON.stringify(schema, null, 2));
+					console.log('Response:', JSON.stringify(response, null, 2));
+					// logs the path of the schema docs
+					console.log('Path:', path);
+				}
 				assert(response.hasOwnProperty(prop), `"${prop}" is a required property (path: ${method} ${path}, context: ${context})`);
 
 				// Don't proceed with type-check if the value could possibly be unset (nullable: true, in spec)
@@ -668,7 +675,14 @@ describe('API', async () => {
 			if (additionalProperties) { // All bets are off
 				return;
 			}
-
+			// Debug logging
+			if (!schema[prop]) {
+				console.log('------------------------------');
+				console.log('Schema:', JSON.stringify(schema, null, 2));
+				console.log('Response:', JSON.stringify(response, null, 2));
+				// logs the path of the schema docs
+				console.log('Path:', path);
+			}
 			assert(schema[prop], `"${prop}" was found in response, but is not defined in schema (path: ${method} ${path}, context: ${context})`);
 		});
 	}
