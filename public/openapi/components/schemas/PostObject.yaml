@@ -26,7 +26,7 @@ PostObject:
       type: string
       description: An ISO 8601 formatted date string (complementing `timestamp`)
     endorsed:
-      type: boolean
+      type: string
     user:
       type: object
       properties:
