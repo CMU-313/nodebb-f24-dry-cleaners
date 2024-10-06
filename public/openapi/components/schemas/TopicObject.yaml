@@ -223,7 +223,6 @@ TopicObjectSlim:
           type: number
         private:
           type: string
-
         deleterUid:
           type: number
         titleRaw:
