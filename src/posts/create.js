@@ -35,6 +35,7 @@ module.exports = function (Posts) {
 			tid: tid,
 			content: content,
 			timestamp: timestamp,
+			endorsed: false,
 		};
 
 		if (data.toPid) {
@@ -47,7 +48,10 @@ module.exports = function (Posts) {
 			postData.handle = data.handle;
 		}
 
-		let result = await plugins.hooks.fire('filter:post.create', { post: postData, data: data });
+		let result = await plugins.hooks.fire('filter:post.create', {
+			post: postData,
+			data: data,
+		});
 		postData = result.post;
 		await db.setObject(`post:${postData.pid}`, postData);
 
@@ -65,7 +69,10 @@ module.exports = function (Posts) {
 			Posts.uploads.sync(postData.pid),
 		]);
 
-		result = await plugins.hooks.fire('filter:post.get', { post: postData, uid: data.uid });
+		result = await plugins.hooks.fire('filter:post.get', {
+			post: postData,
+			uid: data.uid,
+		});
 		result.post.isMain = isMain;
 		plugins.hooks.fire('action:post.save', { post: _.clone(result.post) });
 		return result.post;
@@ -91,4 +98,13 @@ module.exports = function (Posts) {
 			throw new Error('[[error:invalid-pid]]');
 		}
 	}
+
+	// updates endorsement field given post id and endorsement status
+	Posts.updateEndorsement = async function (pid, endorsed) {
+		console.log('TRYING TO UPDATEEE', pid, endorsed);
+		await db.setObjectField(`post:${pid}`, 'endorsed', endorsed);
+		console.log('successfuly updated');
+		const postData = await db.getObject(`post:${pid}`);
+		return postData;
+	};
 };

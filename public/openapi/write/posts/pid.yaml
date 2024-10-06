@@ -36,6 +36,8 @@ get:
                     type: string
                   timestamp:
                     type: number
+                  endorsed:
+                    type: string
                   flagId:
                     type: number
                   deleted:

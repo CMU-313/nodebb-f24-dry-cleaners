@@ -63,6 +63,8 @@ get:
                           type: string
                         timestamp:
                           type: number
+                        endorsed:
+                          type: string
                         votes:
                           type: number
                         deleted:
