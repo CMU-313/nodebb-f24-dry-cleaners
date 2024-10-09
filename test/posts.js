@@ -47,6 +47,7 @@ describe('Post\'s', () => {
 			cid: cid,
 			title: 'Test Topic Title',
 			content: 'The content of test topic',
+			isprivate: false,
 		}));
 		await groups.join('Global Moderators', globalModUid);
 	});
@@ -841,7 +842,15 @@ describe('Post\'s', () => {
 		});
 
 		it('should get post summary', async () => {
+			console.log('---------this is where the problmatic test starts---------');
+			console.log('voterUid:', voterUid);
+			console.log('pid:', pid);
+
 			const summary = await apiPosts.getSummary({ uid: voterUid }, { pid });
+
+			console.log('summary:', summary);
+
+
 			assert(summary);
 		});
 

@@ -57,12 +57,17 @@ postsAPI.getSummary = async (caller, { pid }) => {
 	const tid = await posts.getPostField(pid, 'tid');
 	const topicPrivileges = await privileges.topics.get(tid, caller.uid);
 	if (!topicPrivileges.read || !topicPrivileges['topics:read']) {
+		console.log('topicPrivileges.read', topicPrivileges.read);
+		console.log('topicPrivileges[topics:read]', topicPrivileges['topics:read']);
+		console.log('No read privileges');
 		return null;
 	}
 
 	const postsData = await posts.getPostSummaryByPids([pid], caller.uid, {
 		stripTags: false,
 	});
+
+	console.log('postsData:', postsData);
 	posts.modifyPostByPrivilege(postsData[0], topicPrivileges);
 	return postsData[0];
 };
