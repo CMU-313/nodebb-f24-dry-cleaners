@@ -369,7 +369,6 @@ define('forum/topic/postTools', [
 
 			console.log(`Post ${pid} endorsement updated to: ${newEndorsed}`);
 
-			// updateEndorsementUI(button, newEndorsed);
 		} catch (error) {
 			console.error('Error updating endorsement:', error);
 		}

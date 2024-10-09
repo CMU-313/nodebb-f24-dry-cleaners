@@ -23,7 +23,6 @@ const upload_url = nconf.get('upload_url');
 const validSorts = ['oldest_to_newest', 'newest_to_oldest', 'most_votes'];
 
 topicsController.get = async function getTopic(req, res, next) {
-	console.log('ELLIA_YANG');
 	const tid = req.params.topic_id;
 
 	if (isInvalidRequest(req, tid)) {
@@ -71,6 +70,11 @@ topicsController.get = async function getTopic(req, res, next) {
 	const { start, stop } = calculateStartStop(currentPage, postIndex, settings);
 
 	await topics.getTopicWithPosts(topicData, set, req.uid, start, stop, reverse);
+	if (topicData.posts) {
+        await Promise.all(topicData.posts.map(async (post) => {
+            post.isEndorsed = await posts.isEndorsed(post.pid);
+        }));
+    }
 
 	topics.modifyPostsByPrivilege(topicData, userPrivileges);
 	topicData.tagWhitelist = categories.filterTagWhitelist(topicData.tagWhitelist, userPrivileges.isAdminOrMod);
