@@ -1,0 +1,50 @@
+put:
+  tags:
+    - posts
+  summary: Update Endorsement Status
+  description: This route updates a post to be endorsed or unendorsed.
+  operationId: updateEndorsementStatus
+  parameters:
+    - name: pid
+      in: path
+      required: true
+      schema:
+        type: string
+      example: 1
+  requestBody:
+    description: Endorsement status
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            endorsed:
+              type: boolean
+              example: true
+  responses:
+    "200":
+      description: Canonical URL of topic
+      content:
+        application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: "success"
+                    message:
+                      type: string
+                      example: "Post endorsed successfully"
+                response:
+                  type: object
+                  example: {}
+    "400":
+      description: Invalid request
+    "404":
+      description: Post not found
+    "500":
+      description: Internal server error
