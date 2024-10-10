@@ -71,10 +71,10 @@ topicsController.get = async function getTopic(req, res, next) {
 
 	await topics.getTopicWithPosts(topicData, set, req.uid, start, stop, reverse);
 	if (topicData.posts) {
-        await Promise.all(topicData.posts.map(async (post) => {
-            post.isEndorsed = await posts.isEndorsed(post.pid);
-        }));
-    }
+		await Promise.all(topicData.posts.map(async (post) => {
+			post.endorsed = await posts.isEndorsed(post.pid);
+		}));
+	}
 
 	topics.modifyPostsByPrivilege(topicData, userPrivileges);
 	topicData.tagWhitelist = categories.filterTagWhitelist(topicData.tagWhitelist, userPrivileges.isAdminOrMod);
