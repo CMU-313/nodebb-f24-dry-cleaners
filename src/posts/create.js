@@ -108,10 +108,9 @@ module.exports = function (Posts) {
 
 	Posts.isEndorsed = async function (pid) {
 		const postData = await db.getObject(`post:${pid}`);
-		if (postData.endorsed === 'true'){
+		if (postData.endorsed === 'true') {
 			return 'true';
-		} else{
-			return '';
 		}
+		return '';
 	};
 };
