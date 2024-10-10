@@ -319,18 +319,4 @@ module.exports = function (Topics) {
 			throw new Error('[[error:no-privileges]]');
 		}
 	}
-
-	Topics.updateVisibility = async function (tid, uid, isprivate) {
-		const topic = await Topics.getTopicFields(tid, ['tid', 'uid', 'private']);
-		// Check if the user is the owner of the topic or has admin privileges
-		const isOwner = topic.uid === uid;
-		const isAdmin = await privileges.users.isAdministrator(uid);
-		if (!isOwner && !isAdmin) {
-			throw new Error('[[error:no-privileges]]');
-		}
-		topic.private = isprivate;
-		await db.setObjectField(`topic:${tid}`, 'private', isprivate);
-		// await plugins.hooks.fire('action:topic.visibilityChange', { tid, uid, isprivate });
-		return topic;
-	};
 };

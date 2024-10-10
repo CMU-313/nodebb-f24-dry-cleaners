@@ -201,8 +201,6 @@ Posts.getReplies = async (req, res) => {
 };
 
 Posts.updateEndorsement = async (req, res) => {
-	console.log('Requests', req.params, req.body);
-	// using req.query just for testing purposes here
 	try {
 		await api.posts.updateEndorsement(req, {
 			pid: req.params.pid,

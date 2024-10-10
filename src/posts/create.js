@@ -101,10 +101,16 @@ module.exports = function (Posts) {
 
 	// updates endorsement field given post id and endorsement status
 	Posts.updateEndorsement = async function (pid, endorsed) {
-		console.log('TRYING TO UPDATEEE', pid, endorsed);
 		await db.setObjectField(`post:${pid}`, 'endorsed', endorsed);
-		console.log('successfuly updated');
 		const postData = await db.getObject(`post:${pid}`);
 		return postData;
+	};
+
+	Posts.isEndorsed = async function (pid) {
+		const postData = await db.getObject(`post:${pid}`);
+		if (postData.endorsed === 'true') {
+			return 'true';
+		}
+		return '';
 	};
 };

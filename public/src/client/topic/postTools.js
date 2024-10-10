@@ -366,10 +366,7 @@ define('forum/topic/postTools', [
 			await api.put(`/posts/${pid}/endorsed`, {
 				endorsed: newEndorsed,
 			});
-
 			console.log(`Post ${pid} endorsement updated to: ${newEndorsed}`);
-
-			// updateEndorsementUI(button, newEndorsed);
 		} catch (error) {
 			console.error('Error updating endorsement:', error);
 		}
