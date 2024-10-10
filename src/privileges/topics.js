@@ -32,15 +32,13 @@ privsTopics.get = async function (tid, uid) {
 	const privData = _.zipObject(privs, userPrivileges);
 	const isOwner = uid > 0 && uid === topicData.uid;
 	const isAdminOrMod = isAdministrator || isModerator;
-	const readable = privData['topics:read'] && (!(topicData.private === 'true') || (isAdminOrMod || isOwner));
-	console.log(readable);
 	const editable = isAdminOrMod;
 	const deletable = (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator;
 	const mayReply = privsTopics.canViewDeletedScheduled(topicData, {}, false, privData['topics:schedule']);
 
 	return await plugins.hooks.fire('filter:privileges.topics.get', {
 		'topics:reply': (privData['topics:reply'] && ((!topicData.locked && mayReply) || isModerator)) || isAdministrator,
-		'topics:read': privData['topics:read'] || isAdministrator,
+		'topics:read': (privData['topics:read'] && !(topicData.private === 'true')) || isAdminOrMod || isOwner,
 		'topics:schedule': privData['topics:schedule'] || isAdministrator,
 		'topics:tag': privData['topics:tag'] || isAdministrator,
 		'topics:delete': (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator,
