@@ -10,7 +10,7 @@ const isInstructor = uid => groups.isMember(uid, 'instructor');
 
 module.exports = function (Topics) {
 	Topics.hasInstructorPosts = async function (tid) {
-		// Get the list of posts for the specified topic ID (tid)
+		// Get the list of poxsts for the specified topic ID (tid)
 		const pids = await db.getSortedSetRange(`tid:${tid}:posts`, 0, -1);
 		console.log(`Post IDs for topic ${tid}:`, pids);
 		if (!pids.length) {
@@ -27,8 +27,6 @@ module.exports = function (Topics) {
 		);
 
 		console.log(`Instructor check results for topic ${tid}:`, instructorCheckResults);
-
-		// Return true if any post was made by an instructor
 		return instructorCheckResults.some(result => result === true);
 	};
 };

@@ -39,6 +39,13 @@ unreadController.get = async function (req, res) {
 		query: req.query,
 	});
 
+	// Edits for Instructor Comment //
+	if (data && data.topics) {
+		await Promise.all(data.topics.map(async (topicData) => {
+			topicData.hasInstructorPosts = await topics.hasInstructorPosts(topicData.tid);
+		}));
+	}
+
 	const isDisplayedAsHome = !(req.originalUrl.startsWith(`${relative_path}/api/unread`) || req.originalUrl.startsWith(`${relative_path}/unread`));
 	const baseUrl = isDisplayedAsHome ? '' : 'unread';
 
