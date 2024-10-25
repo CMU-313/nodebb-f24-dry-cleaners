@@ -110,12 +110,12 @@ module.exports = function (Posts) {
 	};
 
 	Posts.isEndorsedHelper = async function (pid) {
-        const postData = await db.getObject(`post:${pid}`);
-        if (postData.endorsed === 'true') {
-            return 'true';
-        }
-        return '';
-    };
+		const postData = await db.getObject(`post:${pid}`);
+		if (postData.endorsed === 'true') {
+			return 'true';
+		}
+		return '';
+	};
 
 	function measureIsEndorsed() {
 		const stage = new Iroh.Stage(`
@@ -123,7 +123,7 @@ module.exports = function (Posts) {
 				return result();
 			}
 		`);
-	
+
 		let now = 0;
 		let then = 0;
 
@@ -134,15 +134,14 @@ module.exports = function (Posts) {
 			.on('after', (e) => {
 				then = performance.now();
 			});
-	
+
 		return async function (pid) {
-			const start = process.hrtime();
 			console.log(`=================Checking endorsement for post ${pid}================`);
 			const result = await Posts.isEndorsedHelper(pid);
-			console.log(`Endorsement status for post ${pid} was retrieved in ${then-now}ms`);
+			console.log(`Endorsement status for post ${pid} was retrieved in ${then - now}ms`);
 			return result;
 		};
 	}
-	
+
 	Posts.isEndorsed = measureIsEndorsed();
 };
