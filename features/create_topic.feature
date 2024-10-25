@@ -5,4 +5,4 @@ Feature: Home Page
 
   Scenario: User visits the home page
     Given I am on the home page
-    Then I should see the website title "My Website"
+    Then I should see "NodeBB"

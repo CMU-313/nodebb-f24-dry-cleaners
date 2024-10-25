@@ -1,6 +1,6 @@
 const { Given, Then } = require('@cucumber/cucumber');
 const assert = require('assert');
-const { Builder, By } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 let driver;
 
