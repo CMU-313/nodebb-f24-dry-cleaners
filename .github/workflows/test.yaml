@@ -74,11 +74,11 @@ jobs:
         run: |
           node app --setup="${SETUP}" --ci="${CI}"
 
-      - name: Run ESLint
-        run: npm run lint
-
       - name: Run Standard Linter
         run: npm run lint:standard
+        
+      - name: Run ESLint
+        run: npm run lint
 
       - name: Node tests
         run: npm test
