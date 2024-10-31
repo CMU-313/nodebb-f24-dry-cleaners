@@ -2,6 +2,9 @@
 
 const _ = require('lodash');
 
+const Iroh = require('iroh'); // Import Iroh
+// const iroh = new Iroh(); // Create an Iroh instance
+
 const meta = require('../meta');
 const db = require('../database');
 const plugins = require('../plugins');
@@ -106,11 +109,39 @@ module.exports = function (Posts) {
 		return postData;
 	};
 
-	Posts.isEndorsed = async function (pid) {
+	Posts.isEndorsedHelper = async function (pid) {
 		const postData = await db.getObject(`post:${pid}`);
 		if (postData.endorsed === 'true') {
 			return 'true';
 		}
 		return '';
 	};
+
+	function measureIsEndorsed() {
+		const stage = new Iroh.Stage(`
+			function measured() {
+				return result();
+			}
+		`);
+
+		let now = 0;
+		let then = 0;
+
+		stage.addListener(Iroh.CALL)
+			.on('before', (e) => {
+				now = performance.now();
+			})
+			.on('after', (e) => {
+				then = performance.now();
+			});
+
+		return async function (pid) {
+			console.log(`=================Checking endorsement for post ${pid}================`);
+			const result = await Posts.isEndorsedHelper(pid);
+			console.log(`Endorsement status for post ${pid} was retrieved in ${then - now}ms`);
+			return result;
+		};
+	}
+
+	Posts.isEndorsed = measureIsEndorsed();
 };

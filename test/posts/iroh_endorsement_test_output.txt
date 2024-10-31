@@ -1,0 +1,64 @@
+NodeBB v3.8.4 Copyright (C) 2013-2024 NodeBB Inc.
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions.
+For the full license, please visit: http://www.gnu.org/copyleft/gpl.html
+
+Clustering enabled: Spinning up 1 process(es).
+
+2024-10-25T02:36:06.459Z [4567/273320] - verbose: * using configuration stored in: /home/elliay/nodebb-f24-dry-cleaners/config.json
+2024-10-25T02:36:06.463Z [4567/273320] - info: Initializing NodeBB v3.8.4 http://localhost:4567
+2024-10-25T02:36:06.464Z [4567/273320] - verbose: * using redis store at 127.0.0.1:6379
+2024-10-25T02:36:06.464Z [4567/273320] - verbose: * using themes stored in: /home/elliay/nodebb-f24-dry-cleaners/node_modules
+2024-10-25T02:36:07.606Z [4567/273320] - verbose: [minifier] utilizing a maximum of 7 additional threads
+2024-10-25T02:36:07.695Z [4567/273320] - verbose: Checking dependencies for outdated modules
+2024-10-25T02:36:08.045Z [4567/273320] - verbose: [notifications.init] Registering jobs.
+2024-10-25T02:36:08.047Z [4567/273320] - verbose: [user/jobs] (Re-)starting jobs...
+2024-10-25T02:36:08.049Z [4567/273320] - verbose: [user/jobs] Starting job (digest.daily)
+2024-10-25T02:36:08.052Z [4567/273320] - verbose: [user/jobs] Starting job (digest.weekly)
+2024-10-25T02:36:08.053Z [4567/273320] - verbose: [user/jobs] Starting job (digest.monthly)
+2024-10-25T02:36:08.054Z [4567/273320] - verbose: [user/jobs] Starting job (reset.clean)
+2024-10-25T02:36:08.054Z [4567/273320] - verbose: [user/jobs] jobs started
+2024-10-25T02:36:08.055Z [4567/273320] - verbose: [scheduled topics] Starting jobs.
+2024-10-25T02:36:08.062Z [4567/273320] - verbose: [emailer] Setting up fallback transport
+2024-10-25T02:36:08.077Z [4567/273320] - info: [themes] Using theme nodebb-theme-harmony
+2024-10-25T02:36:08.078Z [4567/273320] - verbose: [plugins] Initializing plugins system
+2024-10-25T02:36:08.085Z [4567/273320] - verbose: [plugins] Found 1 scss file(s) for plugin nodebb-plugin-composer-default
+2024-10-25T02:36:08.087Z [4567/273320] - verbose: [plugins] Found 13 AMD-style module(s) for plugin nodebb-plugin-composer-default
+2024-10-25T02:36:08.089Z [4567/273320] - verbose: [plugins] Found 2 js file(s) for plugin nodebb-plugin-composer-default
+2024-10-25T02:36:08.090Z [4567/273320] - verbose: [plugins] Loaded plugin: nodebb-plugin-composer-default
+2024-10-25T02:36:08.094Z [4567/273320] - verbose: [plugins] Found 1 js file(s) for plugin nodebb-theme-harmony
+2024-10-25T02:36:08.094Z [4567/273320] - verbose: [plugins] Found 2 AMD-style module(s) for plugin nodebb-theme-harmony
+2024-10-25T02:36:08.095Z [4567/273320] - verbose: [plugins] found 2 static directories for nodebb-theme-harmony
+2024-10-25T02:36:08.096Z [4567/273320] - verbose: [plugins] Loaded plugin: nodebb-theme-harmony
+2024-10-25T02:36:08.136Z [4567/273320] - verbose: [plugins] Found 1 scss file(s) for plugin nodebb-plugin-markdown
+2024-10-25T02:36:08.137Z [4567/273320] - verbose: [plugins] Found 1 js file(s) for plugin nodebb-plugin-markdown
+2024-10-25T02:36:08.137Z [4567/273320] - verbose: [plugins] Found 2 AMD-style module(s) for plugin nodebb-plugin-markdown
+2024-10-25T02:36:08.139Z [4567/273320] - verbose: [plugins] found 1 static directories for nodebb-plugin-markdown
+2024-10-25T02:36:08.140Z [4567/273320] - verbose: [plugins] Loaded plugin: nodebb-plugin-markdown
+2024-10-25T02:36:08.148Z [4567/273320] - verbose: [plugins] Found 1 js file(s) for plugin nodebb-plugin-mentions
+2024-10-25T02:36:08.148Z [4567/273320] - verbose: [plugins] Found 1 AMD-style module(s) for plugin nodebb-plugin-mentions
+2024-10-25T02:36:08.157Z [4567/273320] - verbose: [plugins] Loaded plugin: nodebb-plugin-mentions
+2024-10-25T02:36:08.160Z [4567/273320] - verbose: [plugins] Found 1 css file(s) for plugin nodebb-widget-essentials
+2024-10-25T02:36:08.160Z [4567/273320] - verbose: [plugins] Loaded plugin: nodebb-widget-essentials
+2024-10-25T02:36:08.163Z [4567/273320] - verbose: [plugins] Loaded plugin: nodebb-rewards-essentials
+2024-10-25T02:36:08.194Z [4567/273320] - verbose: [plugins] Found 1 scss file(s) for plugin nodebb-plugin-emoji
+2024-10-25T02:36:08.194Z [4567/273320] - verbose: [plugins] Found 1 acpScss file(s) for plugin nodebb-plugin-emoji
+2024-10-25T02:36:08.195Z [4567/273320] - verbose: [plugins] Found 1 js file(s) for plugin nodebb-plugin-emoji
+2024-10-25T02:36:08.195Z [4567/273320] - verbose: [plugins] Found 1 js file(s) for plugin nodebb-plugin-emoji
+2024-10-25T02:36:08.195Z [4567/273320] - verbose: [plugins] Found 5 AMD-style module(s) for plugin nodebb-plugin-emoji
+2024-10-25T02:36:08.196Z [4567/273320] - verbose: [plugins] found 1 static directories for nodebb-plugin-emoji
+2024-10-25T02:36:08.199Z [4567/273320] - verbose: [plugins] Loaded plugin: nodebb-plugin-emoji
+2024-10-25T02:36:08.209Z [4567/273320] - verbose: [plugins] Loaded plugin: nodebb-plugin-emoji-android
+2024-10-25T02:36:08.210Z [4567/273320] - info: [plugins] Plugins OK
+2024-10-25T02:36:08.230Z [4567/273320] - verbose: [plugins] All plugins reloaded and rerouted
+2024-10-25T02:36:08.243Z [4567/273320] - info: [api] Adding 0 route(s) to `api/v3/plugins`
+2024-10-25T02:36:08.250Z [4567/273320] - info: [router] Routes added
+2024-10-25T02:36:08.251Z [4567/273320] - verbose: [meta/blacklist] Loading 0 blacklist rule(s)
+2024-10-25T02:36:08.253Z [4567/273320] - info: 🎉 NodeBB Ready
+2024-10-25T02:36:08.254Z [4567/273320] - info: 🤝 Enabling 'trust proxy'
+2024-10-25T02:36:08.257Z [4567/273320] - info: 📡 NodeBB is now listening on: 0.0.0.0:4567
+2024-10-25T02:36:08.257Z [4567/273320] - info: 🔗 Canonical URL: http://localhost:4567
+=================Checking endorsement for post 12================
+=================Checking endorsement for post 15================
+Endorsement status for post 12 was retrieved in 0ms
+Endorsement status for post 15 was retrieved in 0ms
