@@ -91,16 +91,16 @@ define('forum/topic', [
         });
     };
 
-	function handleTopicSearch() {
-		require(['mousetrap'], (mousetrap) => {
-			if (config.topicSearchEnabled) {
-				require(['search'], function (search) {
-					mousetrap.bind(['command+f', 'ctrl+f'], function (e) {
+  	function handleTopicSearch() {
+    	require(['mousetrap'], (mousetrap) => {
+      		if (config.topicSearchEnabled) {
+        		require(['search'], function (search) {
+          			mousetrap.bind(['command+f', 'ctrl+f'], function (e) {
 						e.preventDefault();
 						let form = $('[component="navbar"] [component="search/form"]');
-						if (!form.length) { // harmony
+            			if (!form.length) { // harmony
 							form = $('[component="sidebar/right"] [component="search/form"]');
-						}
+            			}
 						form.find('[component="search/fields"] input[name="query"]').val('in:topic-' + ajaxify.data.tid + ' ');
 						search.showAndFocusInput(form);
 					});

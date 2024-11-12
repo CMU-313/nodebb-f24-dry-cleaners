@@ -12,10 +12,9 @@ const groups = require('../groups');
 const privileges = require('../privileges');
 const translate = require('../translate');
 
-
 module.exports = function (Posts) {
-	Posts.create = async function (data) {
-		// This is an internal method, consider using Topics.reply instead
+  Posts.create = async function (data) {
+    // This is an internal method, consider using Topics.reply instead
 		const { uid } = data;
 		const { tid } = data;
 		const content = data.content.toString();

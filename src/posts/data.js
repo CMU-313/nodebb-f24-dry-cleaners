@@ -56,15 +56,15 @@ module.exports = function (Posts) {
 };
 
 function modifyPost(post, fields) {
-	if (post) {
+  if (post) {
 		db.parseIntFields(post, intFields, fields);
-		if (post.hasOwnProperty('upvotes') && post.hasOwnProperty('downvotes')) {
+    if (post.hasOwnProperty('upvotes') && post.hasOwnProperty('downvotes')) {
 			post.votes = post.upvotes - post.downvotes;
-		}
-		if (post.hasOwnProperty('timestamp')) {
+    }
+    if (post.hasOwnProperty('timestamp')) {
 			post.timestampISO = utils.toISOString(post.timestamp);
-		}
-		if (post.hasOwnProperty('edited')) {
+    }
+    if (post.hasOwnProperty('edited')) {
 			post.editedISO = post.edited !== 0 ? utils.toISOString(post.edited) : '';
 		}
     // Mark post as "English" if decided by translator service or if it has no info
