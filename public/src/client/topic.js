@@ -78,29 +78,29 @@ define('forum/topic', [
 	};
 
 	function configurePostToggle() {
-        $(".topic").on("click", ".view-translated-btn", function () {
-            // Toggle the visibility of the next .translated-content div
-            $(this).closest('.sensitive-content-message').next('.translated-content').toggle();
-            // Optionally, change the button text based on visibility
-            var isVisible = $(this).closest('.sensitive-content-message').next('.translated-content').is(':visible');
-            if (isVisible) {
-                $(this).text('Hide the translated message.');
-            } else {
-                $(this).text('Click here to view the translated message.');
-            }
-        });
-    };
+		$('.topic').on('click', '.view-translated-btn', function () {
+			// Toggle the visibility of the next .translated-content div
+			$(this).closest('.sensitive-content-message').next('.translated-content').toggle();
+			// Optionally, change the button text based on visibility
+			var isVisible = $(this).closest('.sensitive-content-message').next('.translated-content').is(':visible');
+			if (isVisible) {
+				$(this).text('Hide the translated message.');
+			} else {
+				$(this).text('Click here to view the translated message.');
+			}
+		});
+	}
 
-  	function handleTopicSearch() {
-    	require(['mousetrap'], (mousetrap) => {
-      		if (config.topicSearchEnabled) {
-        		require(['search'], function (search) {
-          			mousetrap.bind(['command+f', 'ctrl+f'], function (e) {
+	function handleTopicSearch() {
+		require(['mousetrap'], (mousetrap) => {
+			if (config.topicSearchEnabled) {
+				require(['search'], function (search) {
+					mousetrap.bind(['command+f', 'ctrl+f'], function (e) {
 						e.preventDefault();
 						let form = $('[component="navbar"] [component="search/form"]');
-            			if (!form.length) { // harmony
+						if (!form.length) { // harmony
 							form = $('[component="sidebar/right"] [component="search/form"]');
-            			}
+						}
 						form.find('[component="search/fields"] input[name="query"]').val('in:topic-' + ajaxify.data.tid + ' ');
 						search.showAndFocusInput(form);
 					});

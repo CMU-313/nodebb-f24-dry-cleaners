@@ -13,14 +13,14 @@ const privileges = require('../privileges');
 const translate = require('../translate');
 
 module.exports = function (Posts) {
-  Posts.create = async function (data) {
-    // This is an internal method, consider using Topics.reply instead
+	Posts.create = async function (data) {
+		// This is an internal method, consider using Topics.reply instead
 		const { uid } = data;
 		const { tid } = data;
 		const content = data.content.toString();
 		const timestamp = data.timestamp || Date.now();
 		const isMain = data.isMain || false;
-    	const [isEnglish, translatedContent] = await translate.translate(data);
+		const [isEnglish, translatedContent] = await translate.translate(data);
 
 		if (!uid && parseInt(uid, 10) !== 0) {
 			throw new Error('[[error:invalid-uid]]');
