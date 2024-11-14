@@ -25,10 +25,12 @@ PostObject:
     timestampISO:
       type: string
       description: An ISO 8601 formatted date string (complementing `timestamp`)
-    endorsed:
+    translatedContent:
       type: string
     isEnglish: 
-      type: boolean
+      type: string
+    endorsed:
+      type: string
     user:
       type: object
       properties:

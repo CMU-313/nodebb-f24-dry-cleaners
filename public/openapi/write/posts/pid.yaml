@@ -36,6 +36,10 @@ get:
                     type: string
                   timestamp:
                     type: number
+                  translatedContent:
+                    type: string
+                  isEnglish:
+                    type: string
                   endorsed:
                     type: string
                   flagId:

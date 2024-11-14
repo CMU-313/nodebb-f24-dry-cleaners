@@ -62,6 +62,10 @@ get:
                           type: string
                         index:
                           type: number
+                        translatedContent:
+                          type: string
+                        isEnglish: 
+                          type: string
                         user:
                           type: object
                           properties:

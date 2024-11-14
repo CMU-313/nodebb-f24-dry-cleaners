@@ -80,6 +80,12 @@ get:
                                             timestampISO:
                                               type: string
                                               description: An ISO 8601 formatted date string (complementing `timestamp`)
+                                            translatedContent:
+                                              type: string
+                                            isEnglish: 
+                                              type: string
+                                            endorsed:
+                                              type: string
                                             user:
                                               type: object
                                               properties:

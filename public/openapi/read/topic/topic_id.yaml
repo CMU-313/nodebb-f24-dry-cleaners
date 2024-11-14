@@ -63,6 +63,10 @@ get:
                           type: string
                         timestamp:
                           type: number
+                        translatedContent:
+                          type: string
+                        isEnglish:
+                          type: string
                         endorsed:
                           type: string
                         votes:
@@ -82,8 +86,6 @@ get:
                         timestampISO:
                           type: string
                           description: An ISO 8601 formatted date string (complementing `timestamp`)
-                        isEnglish:
-                          type: boolean
                         editedISO:
                           type: string
                         index:
