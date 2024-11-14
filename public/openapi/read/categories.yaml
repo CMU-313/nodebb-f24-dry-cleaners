@@ -85,6 +85,8 @@ get:
                                             timestampISO:
                                               type: string
                                               description: An ISO 8601 formatted date string (complementing `timestamp`)
+                                            isEnglish:
+                                              type: boolean
                                             user:
                                               type: object
                                               properties:
@@ -145,6 +147,8 @@ get:
                                   timestampISO:
                                     type: string
                                     description: An ISO 8601 formatted date string (complementing `timestamp`)
+                                  isEnglish:
+                                    type: boolean
                                   user:
                                     type: object
                                     properties:
