@@ -10,6 +10,7 @@ translatorApi.translate = async function (postData) {
 	// const TRANSLATOR_API = 'http://127.0.0.1:5000/';
 	const response = await fetch(`${TRANSLATOR_API}/?content=${postData.content}`);
 	const data = await response.json();
+	console.log('IN TRANSLATE INDEX.JS')
 	console.log(data)
 	return [data.is_english, data.translated_content];
 };
