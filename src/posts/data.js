@@ -71,5 +71,4 @@ function modifyPost(post, fields) {
 		post.isEnglish = post.isEnglish === 'true' || post.isEnglish === undefined;
 	}
 	// Mark post as "English" if decided by translator service or if it has no info
-
 }
