@@ -623,7 +623,7 @@ describe('API', async () => {
 					// logs the path of the schema docs
 					console.log('Path:', path);
 				}
-				if (prop != 'isEnglish' && prop != 'translatedContent'){
+				if (prop !== 'isEnglish' && prop !== 'translatedContent') {
 					assert(response.hasOwnProperty(prop), `"${prop}" is a required property (path: ${method} ${path}, context: ${context})`);
 
 					// Don't proceed with type-check if the value could possibly be unset (nullable: true, in spec)
@@ -682,7 +682,7 @@ describe('API', async () => {
 				// logs the path of the schema docs
 				console.log('Path:', path);
 			}
-			if (prop != 'isEnglish' && prop != 'translatedContent'){
+			if (prop !== 'isEnglish' && prop !== 'translatedContent') {
 				assert(schema[prop], `"${prop}" was found in response, but is not defined in schema (path: ${method} ${path}, context: ${context})`);
 			}
 		});
