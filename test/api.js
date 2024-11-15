@@ -610,7 +610,6 @@ describe('API', async () => {
 		}
 		required.forEach((prop) => {
 			if (schema.hasOwnProperty(prop)) {
-				
 				assert(response.hasOwnProperty(prop), `"${prop}" is a required property (path: ${method} ${path}, context: ${context})`);
 
 				// Don't proceed with type-check if the value could possibly be unset (nullable: true, in spec)
