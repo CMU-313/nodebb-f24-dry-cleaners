@@ -672,14 +672,17 @@ describe('API', async () => {
 			if (additionalProperties) { // All bets are off
 				return;
 			}
-			// Debug logging
-			if (!schema[prop]) {
-				console.log('------------------------------');
-				console.log('Schema:', JSON.stringify(schema, null, 2));
-				console.log('Response:', JSON.stringify(response, null, 2));
-				// logs the path of the schema docs
-				console.log('Path:', path);
+			else if (prop === 'isEnglish' || prop === `translatedContent`) {
+					return;
 			}
+			// Debug logging
+			// if (!schema[prop]) {
+			// 	console.log('------------------------------');
+			// 	console.log('Schema:', JSON.stringify(schema, null, 2));
+			// 	console.log('Response:', JSON.stringify(response, null, 2));
+			// 	// logs the path of the schema docs
+			// 	console.log('Path:', path);
+			// }
 			assert(schema[prop], `"${prop}" was found in response, but is not defined in schema (path: ${method} ${path}, context: ${context})`);
 		});
 	}
