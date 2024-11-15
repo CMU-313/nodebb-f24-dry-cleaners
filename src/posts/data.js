@@ -67,7 +67,8 @@ function modifyPost(post, fields) {
 		if (post.hasOwnProperty('edited')) {
 			post.editedISO = post.edited !== 0 ? utils.toISOString(post.edited) : '';
 		}
+
+		post.isEnglish = post.isEnglish === 'true' || post.isEnglish === undefined;
 	}
 	// Mark post as "English" if decided by translator service or if it has no info
-	post.isEnglish = post.isEnglish === 'true' || post.isEnglish === undefined;
 }

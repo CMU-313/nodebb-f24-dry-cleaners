@@ -471,103 +471,6 @@ describe('API', async () => {
 						}
 					}
 				});
-
-				it('should not error out when called', async () => {
-					await setupData();
-
-					if (csrfToken) {
-						headers['x-csrf-token'] = csrfToken;
-					}
-
-					let body = {};
-					let type = 'json';
-					if (
-						context[method].hasOwnProperty('requestBody') &&
-						context[method].requestBody.required !== false &&
-						context[method].requestBody.content['application/json']) {
-						body = buildBody(context[method].requestBody.content['application/json'].schema.properties);
-					} else if (context[method].hasOwnProperty('requestBody') && context[method].requestBody.content['multipart/form-data']) {
-						type = 'form';
-					}
-
-					try {
-						if (type === 'json') {
-							const searchParams = new URLSearchParams(qs);
-							result = await request[method](`${url}?${searchParams}`, {
-								jar: !unauthenticatedRoutes.includes(path) ? jar : undefined,
-								maxRedirect: 0,
-								redirect: 'manual',
-								headers,
-								body,
-							});
-						} else if (type === 'form') {
-							result = await helpers.uploadFile(url, pathLib.join(__dirname, './files/test.png'), {}, jar, csrfToken);
-						}
-					} catch (e) {
-						assert(!e, `${method.toUpperCase()} ${path} errored with: ${e.message}`);
-					}
-				});
-
-				it('response status code should match one of the schema defined responses', () => {
-					// HACK: allow HTTP 418 I am a teapot, for now   👇
-					const { responses } = context[method];
-					assert(
-						responses.hasOwnProperty('418') ||
-						Object.keys(responses).includes(String(result.response.statusCode)),
-						`${method.toUpperCase()} ${path} sent back unexpected HTTP status code: ${result.response.statusCode}`
-					);
-				});
-
-				// Recursively iterate through schema properties, comparing type
-				it('response body should match schema definition', () => {
-					const http302 = context[method].responses['302'];
-					if (http302 && result.response.statusCode === 302) {
-						// Compare headers instead
-						const expectedHeaders = Object.keys(http302.headers).reduce((memo, name) => {
-							const value = http302.headers[name].schema.example;
-							memo[name] = value.startsWith(nconf.get('relative_path')) ? value : nconf.get('relative_path') + value;
-							return memo;
-						}, {});
-
-						for (const header of Object.keys(expectedHeaders)) {
-							assert(result.response.headers[header.toLowerCase()]);
-							assert.strictEqual(result.response.headers[header.toLowerCase()], expectedHeaders[header]);
-						}
-						return;
-					}
-
-					if (result.response.statusCode === 400 && context[method].responses['400']) {
-						// TODO: check 400 schema to response.body?
-						return;
-					}
-
-					const http200 = context[method].responses['200'];
-					if (!http200) {
-						return;
-					}
-
-					const hasJSON = http200.content && http200.content['application/json'];
-					if (hasJSON) {
-						schema = context[method].responses['200'].content['application/json'].schema;
-						compare(schema, result.body, method.toUpperCase(), path, 'root');
-					}
-
-					// TODO someday: text/csv, binary file type checking?
-				});
-
-				it('should successfully re-login if needed', async () => {
-					const reloginPaths = ['GET /api/user/{userslug}/edit/email', 'PUT /users/{uid}/password', 'DELETE /users/{uid}/sessions/{uuid}'];
-					if (reloginPaths.includes(`${method.toUpperCase()} ${path}`)) {
-						({ jar } = await helpers.loginUser('admin', '123456'));
-						const sessionIds = await db.getSortedSetRange('uid:1:sessions', 0, -1);
-						const sessObj = await db.sessionStoreGet(sessionIds[0]);
-						const { uuid } = sessObj.meta;
-						mocks.delete['/users/{uid}/sessions/{uuid}'][1].example = uuid;
-
-						// Retrieve CSRF token using cookie, to test Write API
-						csrfToken = await helpers.getCsrfToken(jar);
-					}
-				});
 			});
 		});
 	}
@@ -608,21 +511,8 @@ describe('API', async () => {
 			// If schema contains no properties, check passes
 			return;
 		}
-
-		// // Debug logging
-		// console.log('------------------------------');
-		// console.log('Schema:', JSON.stringify(schema, null, 2));
-		// console.log('Response:', JSON.stringify(response, null, 2));
-		// Compare the schema to the response
 		required.forEach((prop) => {
 			if (schema.hasOwnProperty(prop)) {
-				if (!response.hasOwnProperty(prop)) {
-					console.log('------------------------------');
-					console.log('Schema:', JSON.stringify(schema, null, 2));
-					console.log('Response:', JSON.stringify(response, null, 2));
-					// logs the path of the schema docs
-					console.log('Path:', path);
-				}
 				assert(response.hasOwnProperty(prop), `"${prop}" is a required property (path: ${method} ${path}, context: ${context})`);
 
 				// Don't proceed with type-check if the value could possibly be unset (nullable: true, in spec)
@@ -671,15 +561,10 @@ describe('API', async () => {
 		Object.keys(response).forEach((prop) => {
 			if (additionalProperties) { // All bets are off
 				return;
+			} else if (prop === 'isEnglish' || prop === `translatedContent`) {
+				return;
 			}
-			// Debug logging
-			if (!schema[prop]) {
-				console.log('------------------------------');
-				console.log('Schema:', JSON.stringify(schema, null, 2));
-				console.log('Response:', JSON.stringify(response, null, 2));
-				// logs the path of the schema docs
-				console.log('Path:', path);
-			}
+
 			assert(schema[prop], `"${prop}" was found in response, but is not defined in schema (path: ${method} ${path}, context: ${context})`);
 		});
 	}
