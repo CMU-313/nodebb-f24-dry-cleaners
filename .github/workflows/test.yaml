@@ -73,6 +73,8 @@ jobs:
             }
         run: |
           node app --setup="${SETUP}" --ci="${CI}"
+      - name: Build Nodebb
+        run: ./nodebb build
         
       - name: Run ESLint
         run: npm run lint
