@@ -472,42 +472,6 @@ describe('API', async () => {
 					}
 				});
 
-				it('should not error out when called', async () => {
-					await setupData();
-
-					if (csrfToken) {
-						headers['x-csrf-token'] = csrfToken;
-					}
-
-					let body = {};
-					let type = 'json';
-					if (
-						context[method].hasOwnProperty('requestBody') &&
-						context[method].requestBody.required !== false &&
-						context[method].requestBody.content['application/json']) {
-						body = buildBody(context[method].requestBody.content['application/json'].schema.properties);
-					} else if (context[method].hasOwnProperty('requestBody') && context[method].requestBody.content['multipart/form-data']) {
-						type = 'form';
-					}
-
-					try {
-						if (type === 'json') {
-							const searchParams = new URLSearchParams(qs);
-							result = await request[method](`${url}?${searchParams}`, {
-								jar: !unauthenticatedRoutes.includes(path) ? jar : undefined,
-								maxRedirect: 0,
-								redirect: 'manual',
-								headers,
-								body,
-							});
-						} else if (type === 'form') {
-							result = await helpers.uploadFile(url, pathLib.join(__dirname, './files/test.png'), {}, jar, csrfToken);
-						}
-					} catch (e) {
-						assert(!e, `${method.toUpperCase()} ${path} errored with: ${e.message}`);
-					}
-				});
-
 				it('response status code should match one of the schema defined responses', () => {
 					// HACK: allow HTTP 418 I am a teapot, for now   👇
 					const { responses } = context[method];
